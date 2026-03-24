@@ -20,6 +20,11 @@ public class Route {
     private Double totalDistance; //Дистанция маршрута
     private String tempo; //Темп ходьбы
 
+    // Ссылка на владельца маршрута
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
     // Связь
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "rout_id")

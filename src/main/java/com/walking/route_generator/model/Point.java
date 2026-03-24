@@ -13,8 +13,8 @@ public class Point {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
-    private Double latitude;
-    private Double longitude;
+    private String name; // Название точки
+    private Double latitude; // Широта
+    private Double longitude; //Долгота
 
 }
