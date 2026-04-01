@@ -9,12 +9,13 @@ import java.util.List;
 @Entity
 @Table(name = "routes")
 
-@Getter @Setter
+
 
 public class Route {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
 
     private String title; // Название маршрута
     private Double totalDistance; //Дистанция маршрута
@@ -29,5 +30,51 @@ public class Route {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "rout_id")
     private List<Point> points;
+
+    public Route() {}
+
+    //Getter and Setter
+    public Long getId(){
+        return id;
+    }
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getTitle(){
+        return title;
+    }
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public Double getTotalDistance(){
+        return totalDistance;
+    }
+    public void setTotalDistance(Double totalDistance) {
+        this.totalDistance = totalDistance;
+    }
+
+    public String getTempo(){
+        return tempo;
+    }
+    public void setTempo(String tempo) {
+        this.tempo = tempo;
+    }
+
+    public List<Point> getPoints(){
+        return points;
+    }
+    public void setPoints(List<Point> points) {
+        this.points = points;
+    }
+
+    public User getUser(){
+        return user;
+    }
+    public void setUser(User user) {
+        this.user = user;
+    }
+
 
 }
