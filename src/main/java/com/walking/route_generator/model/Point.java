@@ -14,6 +14,7 @@ public class Point {
 
     private String name; // Название точки
     private Double latitude; // Широта
+    private String description; // Описание
     private Double longitude; //Долгота
 
     public Point() {}
@@ -31,6 +32,13 @@ public class Point {
     }
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Double getLatitude() {
