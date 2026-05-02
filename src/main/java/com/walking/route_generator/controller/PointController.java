@@ -2,6 +2,7 @@ package com.walking.route_generator.controller;
 
 import com.walking.route_generator.model.Point;
 import com.walking.route_generator.service.PointService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public class PointController {
 
     // Создание новой точки
     @PostMapping
-    public Point createPoint(@RequestBody Point point) {
+    public Point createPoint(@Valid @RequestBody Point point) {
         return pointService.savePoint(point);
     }
 
