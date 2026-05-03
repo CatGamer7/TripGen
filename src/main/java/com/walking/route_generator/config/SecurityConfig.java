@@ -2,6 +2,7 @@ package com.walking.route_generator.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -11,15 +12,15 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity // Включает поддержку безопасности Web
 public class SecurityConfig {
 
-    // Тот самый метод, который ты прислал
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // Отключаем CSRF для тестов через Postman
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll() // Регистрация доступна всем
+                        .requestMatchers("/api/auth/**").permitAll() // Регистрация и логин открыты
                         .anyRequest().authenticated()
-                );
+                )
+                .httpBasic(Customizer.withDefaults()); // Включает базовую авторизацию
 
         return http.build();
     }

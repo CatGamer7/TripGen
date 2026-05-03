@@ -1,5 +1,6 @@
 package com.walking.route_generator.controller;
 
+import com.walking.route_generator.dto.LoginDto;
 import com.walking.route_generator.dto.UserRegisrtationDto;
 import com.walking.route_generator.service.UserService;
 import jakarta.validation.Valid;
@@ -32,5 +33,10 @@ public class AuthController {
 
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> authenticateUser(@RequestBody LoginDto loginDto) {
+        return ResponseEntity.ok(Map.of("message", "Вы успешно вошли в систему!"));
     }
 }
