@@ -1,8 +1,7 @@
 package com.walking.route_generator.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,10 +17,17 @@ public class Point {
     @Size(min = 2, max = 50, message = "Название должно содержать от 2 до 50 символов")
     private String name; // Название точки
 
+    @NotNull(message = "Широта обязательна")
+    @DecimalMin(value = "-90.0", message = "Широта не может быть меньше -90")
+    @DecimalMax(value = "90.0", message = "Широта не может быть больше 90")
     private Double latitude; // Широта
 
     @Size(max = 2000, message = "Описание слишком длинное (максимум 2000 символов)")
     private String description; // Описание
+
+    @NotNull(message = "Долгота обязательна")
+    @DecimalMin(value = "-180.0", message = "Долгота не может быть меньше -180")
+    @DecimalMax(value = "180.0", message = "Долгота не может быть больше 180")
     private Double longitude; //Долгота
 
     public Point() {}
