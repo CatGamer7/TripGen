@@ -22,7 +22,7 @@ public class Route {
     private String tempo; //Темп ходьбы
 
     // Ссылка на владельца маршрута
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 

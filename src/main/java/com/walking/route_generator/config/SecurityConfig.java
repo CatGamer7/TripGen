@@ -19,14 +19,19 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
 
+
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
-                    config.setAllowedOrigins(List.of("http://localhost:5173"));
                     config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     config.setAllowedHeaders(List.of("*"));
+                    config.setAllowedOrigins(List.of(
+                            "http://localhost:5173",
+                            "*"
+                    ));
                     config.setAllowCredentials(true);
                     return config;
                 }))
+
 
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
