@@ -40,6 +40,15 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Route> savedRoutes = new ArrayList<>();
 
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_favorite_points", // Имя таблицы-связки в БД
+            joinColumns = @JoinColumn(name = "user_id"), // Внешний ключ на таблицу users
+            inverseJoinColumns = @JoinColumn(name = "point_id") // Внешний ключ на таблицу points
+    )
+    private java.util.Set<Point> favoritePoints = new java.util.HashSet<>();
+
     public User() {}
 
     //Getter and Setter
@@ -57,5 +66,8 @@ public class User {
 
     public List<Route> getSavedRoutes() { return savedRoutes; }
     public void setSavedRoutes(List<Route> savedRoutes) { this.savedRoutes = savedRoutes; }
+
+    public java.util.Set<Point> getFavoritePoints() { return favoritePoints; }
+    public void setFavoritePoints(java.util.Set<Point> favoritePoints) { this.favoritePoints = favoritePoints; }
 
 }

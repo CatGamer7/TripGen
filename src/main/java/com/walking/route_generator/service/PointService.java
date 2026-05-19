@@ -24,12 +24,22 @@ public class PointService {
     }
 
     // Найти точку по ID
-    public Optional<Point> getPointById(Long id) {
-        return pointRepository.findById(id);
+    public Point getPointById(Long id) {
+        return pointRepository.findById(id)
+                .orElseThrow(() -> new org.springframework.web.server.ResponseStatusException(
+                        org.springframework.http.HttpStatus.NOT_FOUND,
+                        "Точка с id " + id + " не найдена"
+                ));
     }
 
     // Удалить точку
     public void deletePoint(Long id) {
+        if (!pointRepository.existsById(id)) {
+            throw new org.springframework.web.server.ResponseStatusException(
+                    org.springframework.http.HttpStatus.NOT_FOUND,
+                    "Точка не найдена"
+            );
+        }
         pointRepository.deleteById(id);
     }
 }

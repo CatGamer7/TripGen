@@ -30,6 +30,10 @@ public class Point {
     @DecimalMax(value = "180.0", message = "Долгота не может быть больше 180")
     private Double longitude; //Долгота
 
+    @NotNull(message = "Настроение точки обязательно для заполнения")
+    @Enumerated(EnumType.STRING)
+    private Mood mood;
+
     public Point() {}
 
     //Getter and Setter
@@ -66,5 +70,12 @@ public class Point {
     }
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
+    }
+
+    public Mood getMood() {
+        return mood;
+    }
+    public void setMood(Mood mood) {
+        this.mood = mood;
     }
 }

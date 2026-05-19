@@ -17,6 +17,11 @@ public class Route {
     private long id;
 
 
+    @Enumerated(EnumType.STRING)
+    private Mood mood;
+
+    private Integer estimatedMinutes; // Расчётное время прогулки
+
     private String title; // Название маршрута
     private Double totalDistance; //Дистанция маршрута
     private String tempo; //Темп ходьбы
@@ -74,6 +79,20 @@ public class Route {
     }
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Mood getMood() {
+        return mood;
+    }
+    public void setMood(Mood mood) {
+        this.mood = mood;
+    }
+
+    public Integer getEstimatedMinutes() {
+        return estimatedMinutes;
+    }
+    public void setEstimatedMinutes(Integer estimatedMinutes) {
+        this.estimatedMinutes = estimatedMinutes;
     }
 
 
