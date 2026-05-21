@@ -1,0 +1,15 @@
+name: CI — Dev
+
+on:
+  pull_request:
+    branches: [dev]
+  push:
+    branches: [dev]
+
+jobs:
+  backend-ci:
+    name: Backend CI (reusable)
+    uses: clvster/tripgen-devops/.github/workflows/reusable-backend-ci.yml@main
+    secrets:
+      GH_PAT: ${{ secrets.GH_PAT }}
+
