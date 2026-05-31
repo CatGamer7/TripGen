@@ -1,5 +1,4 @@
 name: CI — Dev
-
 on:
   push:
     branches: [dev]
@@ -7,12 +6,11 @@ on:
       - "pom.xml"
   pull_request:
     branches: [dev]
-
 jobs:
   ci:
     name: Backend CI
     uses: clvster/tripgen-devops/.github/workflows/reusable-backend-ci.yml@main
-
+    secrets: inherit
   bump-patch:
     name: Bump patch version
     runs-on: ubuntu-latest
@@ -23,13 +21,11 @@ jobs:
         with:
           token: ${{ secrets.GH_PAT }}
           ref: dev
-
       - uses: actions/setup-java@v4
         with:
           java-version: "21"
           distribution: temurin
           cache: maven
-
       - name: Bump patch in pom.xml
         run: |
           CURRENT=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
@@ -43,4 +39,3 @@ jobs:
           git tag "backend-v$NEW"
           git push origin dev
           git push origin "backend-v$NEW"
-
