@@ -1,0 +1,64 @@
+name: CI — Main
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "pom.xml"
+  pull_request:
+    branches: [main]
+jobs:
+  ci:
+    name: Backend CI
+    uses: clvster/tripgen-devops/.github/workflows/reusable-backend-ci.yml@main
+    secrets: inherit
+  secrets-scan:
+    name: Secrets Scan
+    uses: clvster/tripgen-devops/.github/workflows/reusable-secrets-scan.yml@main
+  bump-minor:
+    name: Bump minor version
+    runs-on: ubuntu-latest
+    needs: [ci, secrets-scan]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    outputs:
+      version: ${{ steps.bump.outputs.new_version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GH_PAT }}
+          ref: main
+      - uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: temurin
+          cache: maven
+      - name: Bump minor in pom.xml
+        id: bump
+        run: |
+          CURRENT=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$CURRENT"
+          NEW="$MAJOR.$((MINOR + 1)).$PATCH"
+          echo "new_version=$NEW" >> $GITHUB_OUTPUT
+          mvn versions:set -DnewVersion="$NEW" -DgenerateBackupPoms=false
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add pom.xml
+          git commit -m "chore: release backend v$NEW [skip ci]"
+          git tag "backend-v$NEW"
+          git push origin main
+          git push origin "backend-v$NEW"
+  notify-devops:
+    name: Notify tripgen-devops
+    runs-on: ubuntu-latest
+    needs: bump-minor
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.DEVOPS_PAT }}
+          script: |
+            await github.rest.repos.createDispatchEvent({
+              owner: 'clvster',
+              repo: 'tripgen-devops',
+              event_type: 'backend-updated',
+            });
+            console.log('Dispatched backend-updated to tripgen-devops');
