@@ -1,4 +1,5 @@
 name: CI — Main
+
 on:
   push:
     branches: [main]
@@ -6,6 +7,7 @@ on:
       - "pom.xml"
   pull_request:
     branches: [main]
+
 jobs:
   ci:
     name: Backend CI
@@ -14,6 +16,7 @@ jobs:
   secrets-scan:
     name: Secrets Scan
     uses: clvster/tripgen-devops/.github/workflows/reusable-secrets-scan.yml@main
+
   bump-minor:
     name: Bump minor version
     runs-on: ubuntu-latest
@@ -26,11 +29,13 @@ jobs:
         with:
           token: ${{ secrets.GH_PAT }}
           ref: main
+
       - uses: actions/setup-java@v4
         with:
           java-version: "21"
           distribution: temurin
           cache: maven
+
       - name: Bump minor in pom.xml
         id: bump
         run: |
@@ -46,6 +51,7 @@ jobs:
           git tag "backend-v$NEW"
           git push origin main
           git push origin "backend-v$NEW"
+
   notify-devops:
     name: Notify tripgen-devops
     runs-on: ubuntu-latest
