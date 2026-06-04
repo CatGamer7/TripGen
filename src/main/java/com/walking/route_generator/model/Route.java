@@ -36,6 +36,9 @@ public class Route {
     @JoinColumn(name = "rout_id")
     private List<Point> points;
 
+    @Column(columnDefinition = "TEXT")
+    private String geometry;
+
     public Route() {}
 
     //Getter and Setter
@@ -95,5 +98,11 @@ public class Route {
         this.estimatedMinutes = estimatedMinutes;
     }
 
+    public String getGeometry() {
+        return geometry;
+    }
+    public void setGeometry(String geometry) {
+        this.geometry = geometry;
+    }
 
 }
