@@ -72,6 +72,15 @@ public class RouteService {
         );
 
 
+        // Собираем waypoints: пользователь → точки цепочки → пользователь
+        List<List<Double>> waypoints = new ArrayList<>();
+        waypoints.add(List.of(req.getUserLatitude(), req.getUserLongitude()));
+        for (Point p : chain) {
+            waypoints.add(List.of(p.getLatitude(), p.getLongitude()));
+        }
+        waypoints.add(List.of(req.getUserLatitude(), req.getUserLongitude()));
+        String geometry = routingClient.getRouteGeometry(waypoints);
+
         Route route = new Route();
         route.setMood(req.getMood());
         route.setPoints(chain);
@@ -80,6 +89,7 @@ public class RouteService {
         route.setEstimatedMinutes(estimatedMinutes);
         route.setTitle("Кольцевой · " + req.getMood().getRussianName()
                 + " · " + tempo.name());
+        route.setGeometry(geometry);
 
         return routeRepository.save(route);
     }

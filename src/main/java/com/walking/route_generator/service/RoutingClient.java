@@ -10,6 +10,7 @@ import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 
 import java.util.*;
+import java.util.ArrayList;
 
 @Component
 public class RoutingClient {
@@ -63,6 +64,37 @@ public class RoutingClient {
             // Fallback: Хаверсин с коэффициентом городских улиц
             System.err.println("ORS недоступен, используем Хаверсин: " + e.getMessage());
             return haversineFallback(fromLat, fromLon, toLat, toLon) * 1.4;
+        }
+    }
+
+    /**
+     * Возвращает encoded polyline всего маршрута через все waypoints.
+     * Waypoints: [[lat, lon], ...] — первая и последняя точка это позиция пользователя.
+     * Если ORS недоступен — возвращает null.
+     */
+    public String getRouteGeometry(List<List<Double>> waypoints) {
+        try {
+            List<List<Double>> orsCoords = new ArrayList<>();
+            for (List<Double> wp : waypoints) {
+                orsCoords.add(List.of(wp.get(1), wp.get(0))); // ORS ждёт [lon, lat]
+            }
+
+            Map<String, Object> body = Map.of("coordinates", orsCoords);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.set("Authorization", apiKey);
+
+            HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
+            ResponseEntity<String> response =
+                    restTemplate.postForEntity(ORS_URL, entity, String.class);
+
+            JsonNode root = objectMapper.readTree(response.getBody());
+            return root.path("routes").get(0).path("geometry").asText();
+
+        } catch (Exception e) {
+            System.err.println("ORS geometry недоступен: " + e.getMessage());
+            return null;
         }
     }
 
